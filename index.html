@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neo Burger — бургерная в Ломоносове и Волхове, доставка бургеров</title>
+  <meta name="description" content="Neo Burger — бургерные в Ломоносове и Волхове: сочные бургеры, роллы, шаверма, крылышки и картошка фри. Доставка по Ломоносову и Петергофу. Адреса и телефоны на сайте.">
+  <!-- TODO: это демо для владельца — поисковикам запрещено его индексировать.
+       При официальном запуске удалить эту строку и Disallow в robots.txt -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#e3121b">
+  <link rel="icon" href="images/logo.png" type="image/png">
+
+  <!-- Превью ссылки в ВК, Телеграме и WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:site_name" content="Neo Burger">
+  <meta property="og:title" content="Neo Burger — бургерная в Ломоносове и Волхове">
+  <meta property="og:description" content="Бургеры с синей, красной и чёрной булкой, роллы, шаверма и картошка фри. Доставка по Ломоносову и Петергофу.">
+  <!-- TODO: когда будет домен, добавить (адреса должны быть полными, с https://):
+       <link rel="canonical" href="https://ДОМЕН/">
+       <meta property="og:url" content="https://ДОМЕН/">
+       <meta property="og:image" content="https://ДОМЕН/images/hall-sign.jpg"> -->
+
+  <!-- Данные для поиска Яндекса и Google: карточка заведения с адресом, телефоном и часами.
+       Держать в согласии с locations в script.js. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Restaurant",
+        "name": "Neo Burger Ломоносов",
+        "servesCuisine": ["Бургеры", "Фастфуд"],
+        "priceRange": "₽",
+        "telephone": "+78124229779",
+        "openingHours": "Mo-Su 10:00-23:00",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "RU",
+          "addressLocality": "Ломоносов",
+          "streetAddress": "Александровская ул., 32Б"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 59.910501, "longitude": 29.775342 },
+        "sameAs": ["https://vk.ru/neoburger"]
+      },
+      {
+        "@type": "Restaurant",
+        "name": "Neo Burger Волхов",
+        "servesCuisine": ["Бургеры", "Фастфуд"],
+        "priceRange": "₽",
+        "telephone": "+79523822235",
+        "openingHours": "Mo-Su 10:00-21:00",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "RU",
+          "addressLocality": "Волхов",
+          "streetAddress": "ул. Юрия Гагарина, 1В, ТРК «CUBUS», 1 этаж"
+        },
+        "geo": { "@type": "GeoCoordinates", "latitude": 59.927274, "longitude": 32.292941 },
+        "sameAs": ["https://vk.ru/neoburger3"]
+      }
+    ]
+  }
+  </script>
+
+  <!-- TODO для Яндекс Директа: вставить сюда код счётчика Яндекс Метрики (metrika.yandex.ru, аккаунт владельца).
+       Звонки по номеру и переходы в ВК Метрика считает сама («автоцели»), отдельный код для них не нужен.
+       Вместе со счётчиком нужна страница «Политика конфиденциальности» и уведомление о cookie (152-ФЗ). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Шапка: логотип, разделы, выбор города и телефон -->
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <!-- TODO: логотип взят из карточки в Яндекс Картах — перед публикацией попросить у владельца исходник (лучше SVG) -->
+      <a href="#" class="logo"><img class="logo__img" src="images/logo.png" alt="" width="58" height="44"><span class="logo__text">NEO<span class="logo__accent">BURGER</span></span></a>
+      <nav class="nav">
+        <a href="#menu">Меню</a>
+        <a href="#delivery">Доставка</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#contacts">Адреса</a>
+      </nav>
+      <div class="topbar__right">
+        <div class="seg" data-city-tabs aria-label="Выбор города"></div>
+        <a href="#contacts" class="topbar__phone hide-mobile" id="top-call" data-call></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Главное про выбранный город: адрес, часы, доставка -->
+  <div class="place">
+    <div class="container place__inner">
+      <p class="place__text">
+        <strong id="place-city"></strong>, <span id="place-address"></span>.
+        <span id="place-hours"></span>.
+        <a href="#delivery" id="place-delivery"></a>
+      </p>
+      <a href="#contacts" class="btn btn--small hide-mobile" data-call>Позвонить</a>
+    </div>
+  </div>
+
+  <!-- Меню — первым блоком страницы -->
+  <section id="menu" class="section section--first">
+    <div class="container">
+      <div class="section__head">
+        <h1 class="section__title">Меню <span class="section__sub">бургерной Neo Burger</span></h1>
+        <input type="search" id="menu-search" class="menu-search" placeholder="Найти блюдо" aria-label="Поиск по меню">
+      </div>
+      <div class="tabs" id="tabs"></div>
+      <div class="menu-list" id="menu-grid"></div>
+      <button type="button" class="btn btn--outline menu-more" id="menu-more" hidden></button>
+      <p class="note">Комбо — цена за средний и большой набор. Цены и наличие блюд в разных городах могут отличаться, уточняйте при заказе.</p>
+    </div>
+  </section>
+
+  <!-- Доставка: зоны и суммы для выбранного города -->
+  <section id="delivery" class="section section--grey">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="section__title">Доставка</h2>
+        <div class="seg" data-city-tabs aria-label="Выбор города"></div>
+      </div>
+      <div id="delivery-info"></div>
+    </div>
+  </section>
+
+  <!-- Отзывы и фото -->
+  <!-- TODO: перед публикацией заменить на фото владельца или получить разрешение авторов (часть снимков — от гостей в Яндекс Картах) -->
+  <section id="reviews" class="section">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="section__title">Отзывы гостей</h2>
+        <p class="score"><strong>4.7 ★</strong> в 2ГИС, больше 80 оценок</p>
+      </div>
+      <div class="reviews">
+        <blockquote class="review">
+          <p>«Одна из лучших бургерных в Ленобласти! Очень вкусно.»</p>
+          <cite>Александр Т., 2ГИС</cite>
+        </blockquote>
+        <blockquote class="review">
+          <p>«Привозят всегда быстрее… Быстро, всегда тёплое.»</p>
+          <cite>Ирка М., Ломоносов, Яндекс Карты</cite>
+        </blockquote>
+        <blockquote class="review">
+          <p>«Картошка фри очень порадовала. И гамбургеры. Обслуживание очень быстрое.»</p>
+          <cite>Светлана С., Волхов, Яндекс Карты</cite>
+        </blockquote>
+      </div>
+      <div class="gallery">
+        <figure>
+          <img src="images/hall-sign.jpg" alt="Вход в Neo Burger с красной неоновой вывеской" loading="lazy">
+          <figcaption>Neo Burger в Волхове</figcaption>
+        </figure>
+        <figure>
+          <img src="images/red-tray.jpg" alt="Наггетсы, картошка фри в фирменной упаковке и газировка на красном подносе" loading="lazy">
+          <figcaption>Наггетсы и фри</figcaption>
+        </figure>
+        <figure>
+          <img src="images/blue-bun.jpg" alt="Бургер с синей булочкой и кунжутом" loading="lazy">
+          <figcaption>Бургер с синей булкой</figcaption>
+        </figure>
+        <figure>
+          <img src="images/black-bun.jpg" alt="Бургер с чёрной булочкой, говяжьей котлетой и салатом" loading="lazy">
+          <figcaption>Бургер с чёрной булкой</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- Адреса и карта -->
+  <section id="contacts" class="section section--grey">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="section__title">Адреса</h2>
+        <div class="seg" data-city-tabs aria-label="Выбор города"></div>
+      </div>
+      <div class="contacts">
+        <div class="contacts__info" id="city-info"></div>
+        <div class="contacts__map">
+          <iframe
+            id="city-map"
+            title="Neo Burger на карте"
+            loading="lazy"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- О нас -->
+  <section id="about" class="section">
+    <div class="container about">
+      <div>
+        <h2 class="section__title">О нас</h2>
+        <p>В ноябре 2014 года мы открыли первую бургерную в Ломоносове. Сегодня Neo Burger работает в Ломоносове и Волхове. Без пафоса: просто вкусно, сытно и по нормальной цене.</p>
+        <ul class="about__list">
+          <li>Котлеты из 100% говядины — так прямо и написано у нас на стене.</li>
+          <li>Хеллбургер, Армагеддон и острые крылышки для любителей остренького.</li>
+          <li>Детский набор с игрушкой, салаты и десерты для всей семьи.</li>
+        </ul>
+      </div>
+      <img class="about__img" src="images/poster.jpg" alt="Плакат на стене Neo Burger: бургер в разрезе — булочка, 100% говядина, сыр, томаты, салат, лук и соус" loading="lazy">
+    </div>
+  </section>
+
+  <!-- Подвал: адреса и телефоны обеих точек подставляются из script.js -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <a href="#" class="logo logo--light">NEO<span class="logo__accent">BURGER</span></a>
+        <p class="footer__copy">© 2026 Neo Burger</p>
+        <!-- TODO: для рекламы в Директе добавить данные владельца: ИП/ООО, ИНН, ОГРН(ИП) — взять у владельца -->
+        <p class="footer__links"><a href="privacy.html">Политика конфиденциальности</a></p>
+
+      </div>
+      <div class="footer__places" id="footer-places"></div>
+    </div>
+  </footer>
+
+  <!-- Круглая кнопка звонка на телефонах (номер подставляется по выбранному городу) -->
+  <a href="#contacts" class="call-fab" data-call aria-label="Позвонить">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+  </a>
+
+  <!-- Плашка про cookie (показывается, пока посетитель не нажал «Хорошо») -->
+  <div class="cookie" id="cookie" hidden>
+    <p>Мы используем cookie и Яндекс Метрику, чтобы сайт был удобнее. <a href="privacy.html">Подробнее</a></p>
+    <button type="button" class="btn btn--small" id="cookie-ok">Хорошо</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

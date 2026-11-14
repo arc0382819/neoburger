@@ -1,0 +1,441 @@
+:root {
+  --white: #ffffff;
+  --grey: #f3f3f3;
+  --line: #e5e5e5;
+  --text: #1f1f1f;
+  --muted: #666666;
+  /* Фирменные цвета Neo Burger: красный — вывеска, жёлтый — упаковка фри */
+  --red: #e3121b;
+  --red-dark: #b80d15;
+  --yellow: #ffc72c;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+
+body {
+  margin: 0;
+  font-family: "Golos Text", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  background: var(--white);
+  color: var(--text);
+}
+
+a { color: var(--red); }
+
+/* Атрибут hidden всегда прячет элемент, даже если у класса задан display */
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Кнопки */
+.btn {
+  display: inline-block;
+  background: var(--red);
+  color: var(--white);
+  border: 2px solid var(--red);
+  border-radius: 6px;
+  padding: 11px 22px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { background: var(--red-dark); border-color: var(--red-dark); }
+.btn--small { padding: 7px 16px; font-size: 15px; }
+.btn--outline { background: var(--white); color: var(--red); }
+.btn--outline:hover { background: var(--red); color: var(--white); }
+
+/* Шапка */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--white);
+  border-bottom: 1px solid var(--line);
+}
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 60px;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 22px;
+  color: var(--text);
+  text-decoration: none;
+}
+.logo__img { display: block; height: 44px; width: auto; }
+.logo__accent { color: var(--red); }
+.logo--light { color: var(--white); }
+.nav a {
+  color: var(--text);
+  text-decoration: none;
+  margin: 0 12px;
+  font-weight: 500;
+}
+.nav a:hover { color: var(--red); }
+.topbar__right { display: flex; align-items: center; gap: 16px; }
+.topbar__phone {
+  color: var(--text);
+  font-weight: 700;
+  font-size: 17px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.topbar__phone:hover { color: var(--red); }
+
+/* Переключатель города */
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--white);
+}
+.seg__btn {
+  border: none;
+  background: none;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+}
+.seg__btn + .seg__btn { border-left: 1px solid var(--line); }
+.seg__btn:hover { background: var(--grey); }
+.seg__btn.active { background: var(--text); color: var(--white); }
+
+/* Строка про выбранный город */
+.place { border-bottom: 1px solid var(--line); }
+.place__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.place__text { margin: 0; font-size: 15px; color: var(--muted); }
+.place__text strong { color: var(--text); }
+.place__text a { color: var(--text); font-weight: 500; }
+
+/* Секции */
+.section { padding: 56px 0; }
+.section--grey { background: var(--grey); }
+.section--first { padding-top: 32px; }
+.section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin-bottom: 20px;
+}
+.section__title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+/* Пояснение к заголовку — мельче и серым, чтобы «Меню» оставалось главным словом */
+.section__sub { font-size: 18px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+
+/* Поиск */
+.menu-search {
+  flex: 1;
+  max-width: 300px;
+  min-width: 200px;
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  padding: 9px 14px;
+  font-family: inherit;
+  font-size: 16px;
+  color: var(--text);
+}
+.menu-search:focus { outline: none; border-color: var(--text); }
+
+/* Вкладки категорий: текст с красной чертой под активной */
+.tabs {
+  display: flex;
+  gap: 4px 24px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 8px;
+}
+.tab {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 10px 0;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--text); border-bottom-color: var(--red); }
+.tab__count { font-size: 13px; color: var(--muted); }
+
+/* Список блюд: строки, как в бумажном меню */
+.menu-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+}
+.row {
+  display: flex;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.row .pixel-art { flex-shrink: 0; margin-top: 2px; }
+/* Бургеры с цветной булкой: жёлтая подложка, как упаковка фри */
+.row--hit {
+  background: var(--yellow);
+  border-bottom-color: transparent;
+  border-radius: 6px;
+  padding: 16px;
+  margin: 8px 0;
+}
+/* Серый текст на жёлтом плохо читается — внутри делаем его тёмным */
+.row--hit { --muted: var(--text); }
+.row--hit .row__dots { border-bottom-color: rgba(0, 0, 0, 0.35); }
+.row__main { flex: 1; min-width: 0; }
+.row__head { display: flex; align-items: baseline; gap: 8px; }
+.row__name { margin: 0; font-size: 17px; font-weight: 700; }
+.row__dots {
+  flex: 1;
+  min-width: 16px;
+  border-bottom: 2px dotted #c4c4c4;
+  transform: translateY(-4px);
+}
+.row__price { font-size: 17px; font-weight: 900; white-space: nowrap; }
+.row__desc { margin: 4px 0 0; font-size: 14px; color: var(--muted); }
+.row__extra { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--red);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+  vertical-align: 2px;
+}
+
+.menu-more { display: block; margin: 24px auto 0; }
+.menu-empty { grid-column: 1 / -1; color: var(--muted); padding: 24px 0; }
+.note { color: var(--muted); font-size: 14px; margin: 20px 0 0; }
+
+/* Доставка */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--white);
+  margin-bottom: 20px;
+}
+.table th,
+.table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.table th { font-size: 14px; font-weight: 500; color: var(--muted); }
+.table td:not(:first-child) { white-space: nowrap; font-weight: 700; }
+.delivery-off {
+  background: var(--white);
+  border-left: 4px solid var(--red);
+  padding: 16px 20px;
+  margin: 0 0 20px;
+}
+.delivery-foot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  color: var(--muted);
+}
+
+/* Отзывы */
+.score { margin: 0; color: var(--muted); }
+.score strong { color: var(--text); font-size: 18px; }
+.reviews {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.review {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 3px solid var(--yellow);
+}
+.review p { margin: 0 0 8px; font-size: 18px; }
+.review cite { color: var(--muted); font-style: normal; font-size: 14px; }
+
+/* Фото */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 40px;
+}
+.gallery figure { margin: 0; }
+.gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.gallery figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+/* Адреса */
+.contacts {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 32px;
+}
+.contacts__info p { margin: 0 0 16px; }
+.contacts__info .label { display: block; color: var(--muted); font-size: 14px; }
+.contacts__info .city-note { color: var(--muted); font-size: 14px; }
+.contacts__map iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--line);
+}
+
+/* О нас */
+.about {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.about p { max-width: 62ch; }
+.about__list { padding-left: 20px; margin: 0; }
+.about__list li { margin-bottom: 6px; }
+.about__img {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  border-radius: 4px;
+  justify-self: end;
+}
+
+/* Подвал */
+.footer {
+  background: var(--text);
+  color: #c9c9c9;
+  padding: 36px 0;
+  font-size: 14px;
+}
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.footer__copy { margin: 8px 0 0; }
+.footer__places { display: flex; flex-wrap: wrap; gap: 24px 56px; }
+.footer__places h3 { margin: 0 0 6px; color: var(--white); font-size: 16px; }
+.footer__places p { margin: 0 0 2px; }
+.footer__places a { color: var(--white); }
+
+.footer__links { margin: 8px 0 0; }
+.footer__links a { color: #c9c9c9; }
+
+/* Плашка про cookie */
+.cookie {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 30;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--text);
+  color: var(--white);
+  border-radius: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  font-size: 14px;
+}
+.cookie p { margin: 0; }
+.cookie a { color: var(--yellow); }
+
+/* Текстовые страницы (политика) */
+.doc { max-width: 760px; }
+.doc h2 { margin: 32px 0 8px; font-size: 20px; }
+.doc__date { color: var(--muted); }
+.todo { background: var(--yellow); padding: 0 4px; border-radius: 3px; }
+
+/* Круглая кнопка звонка — только на телефонах */
+.call-fab {
+  display: none;
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--red);
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
+/* Планшеты и телефоны */
+@media (max-width: 860px) {
+  /* на телефоне звонок — через круглую кнопку внизу */
+  .nav,
+  .hide-mobile { display: none; }
+  .logo { font-size: 15px; gap: 6px; }
+  .topbar__inner { gap: 8px; }
+  .logo__img { height: 36px; }
+  .seg__btn { padding: 6px 10px; font-size: 13px; }
+  .place__inner { flex-wrap: wrap; }
+  .section { padding: 40px 0; }
+  .section__title { font-size: 26px; }
+  .menu-search { max-width: none; }
+  .menu-list { grid-template-columns: 1fr; }
+  .reviews,
+  .contacts,
+  .about { grid-template-columns: 1fr; }
+  .reviews { gap: 20px; }
+  .about__img { justify-self: start; max-width: 260px; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .table th,
+  .table td { padding: 10px 8px; font-size: 14px; }
+  .call-fab { display: flex; }
+  /* Плашка cookie на всю ширину и выше круглой кнопки звонка */
+  .cookie { right: 16px; max-width: none; bottom: 84px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
