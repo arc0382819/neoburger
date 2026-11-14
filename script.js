@@ -38,7 +38,7 @@ const menu = {
     { name: "Ролл Барбекю", price: 345, combo: [590, 630], spicy: true, desc: "Тортилья, бекон, куриные стрипсы, халапеньо, Айсберг, соус барбекю" },
     { name: "Неоролл", price: 325, combo: [570, 610], desc: "Тортилья, томаты, 2 котлеты, Айсберг, красный лук, дымчатый соус" },
     { name: "Ист Ролл", price: 245, combo: [490, 530], desc: "Тортилья, куриные стрипсы, Айсберг, томаты, соус «Ист Ролл»" },
-    { name: "Мини-ролл", price: 160, combo: [405, 445] }
+    { name: "Мини-ролл", price: 160, combo: [405, 445], desc: "TODO: уточнить состав у владельца" } // в ВК состав не нашёлся (14.11.2026)
   ],
   "Шаверма и хот-доги": [
     { name: "Шаверма на тарелке", price: 495, desc: "С картофелем фри или айдахо, с овощами" },
@@ -527,6 +527,11 @@ function routeUrl([lat, lon]) {
   return `https://yandex.ru/maps/?rtext=~${lat},${lon}&rtt=auto`;
 }
 
+// Чат с группой: "https://vk.ru/neoburger" -> "https://vk.me/neoburger"
+function vkChatUrl(vk) {
+  return "https://vk.me/" + vk.split("/").pop();
+}
+
 // Номер вида "+7 (812) 422-97-79" -> "tel:+78124229779"
 function telLink(phone) {
   return "tel:" + phone.replace(/[^\d+]/g, "");
@@ -554,6 +559,7 @@ function deliveryHtml(city) {
     ${body}
     <div class="delivery-foot">
       <a href="${telLink(place.phone)}" class="btn">Заказать по телефону ${place.phone}</a>
+      <a href="${vkChatUrl(place.vk)}" class="btn btn--outline" target="_blank" rel="noopener">Написать в ВК</a>
       <span>${where}${place.hours}.</span>
     </div>
   `;
@@ -574,6 +580,8 @@ function showCity(city) {
 
   // Все кнопки «Позвонить» на странице помечены data-call
   document.querySelectorAll("[data-call]").forEach(link => { link.href = tel; });
+  // Круглая кнопка ВК на телефонах — чат с группой выбранного города
+  document.querySelectorAll("[data-vk]").forEach(link => { link.href = vkChatUrl(place.vk); });
   topCallEl.textContent = place.phone;
 
   cityInfoEl.innerHTML = `
@@ -582,7 +590,10 @@ function showCity(city) {
     <p><span class="label">Телефон</span><a href="${tel}">${place.phone}</a></p>
     <p><span class="label">ВКонтакте</span><a href="${place.vk}" target="_blank" rel="noopener">${place.vk.replace("https://", "")}</a></p>
     ${place.note ? `<p class="city-note">${place.note}</p>` : ""}
-    <p><a href="${routeUrl(place.coords)}" class="btn btn--small btn--outline" target="_blank" rel="noopener">Построить маршрут в Яндекс Картах</a></p>
+    <p class="contacts__buttons">
+      <a href="${routeUrl(place.coords)}" class="btn btn--small btn--outline" target="_blank" rel="noopener">Построить маршрут в Яндекс Картах</a>
+      <a href="${vkChatUrl(place.vk)}" class="btn btn--small btn--outline" target="_blank" rel="noopener">Написать в ВК</a>
+    </p>
   `;
   // Карту перезагружаем, только если точка правда сменилась
   const map = mapUrl(place.coords);

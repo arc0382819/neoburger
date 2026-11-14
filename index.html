@@ -67,10 +67,15 @@
   <!-- TODO для Яндекс Директа: вставить сюда код счётчика Яндекс Метрики (metrika.yandex.ru, аккаунт владельца).
        Звонки по номеру и переходы в ВК Метрика считает сама («автоцели»), отдельный код для них не нужен.
        Вместе со счётчиком нужна страница «Политика конфиденциальности» и уведомление о cookie (152-ФЗ). -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Кириллицу шрифта грузим сразу, чтобы текст не перерисовывался -->
+  <link rel="preload" href="fonts/golos-text-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
+  <!-- Без JavaScript прячем то, что без него не работает: переключатели городов, поиск и вкладки меню -->
+  <noscript>
+    <style>
+      [data-city-tabs], .menu-search, .tabs, .menu-more { display: none !important; }
+    </style>
+  </noscript>
 </head>
 <body>
 
@@ -86,25 +91,51 @@
         <a href="#contacts">Адреса</a>
       </nav>
       <div class="topbar__right">
-        <div class="seg" data-city-tabs aria-label="Выбор города"></div>
-        <a href="#contacts" class="topbar__phone hide-mobile" id="top-call" data-call></a>
+        <div class="seg" data-city-tabs role="group" aria-label="Выбор города"></div>
+        <a href="tel:+78124229779" class="topbar__phone hide-mobile" id="top-call" data-call>+7 (812) 422-97-79</a>
       </div>
     </div>
   </header>
+
+  <!-- Данные Ломоносова ниже прописаны прямо в HTML, чтобы адрес и телефон были видны без JavaScript.
+       script.js перерисовывает их по выбранному городу.
+       Держать в согласии с locations в script.js и с JSON-LD в <head>. -->
 
   <!-- Главное про выбранный город: адрес, часы, доставка -->
   <div class="place">
     <div class="container place__inner">
       <p class="place__text">
-        <strong id="place-city"></strong>, <span id="place-address"></span>.
-        <span id="place-hours"></span>.
-        <a href="#delivery" id="place-delivery"></a>
+        <strong id="place-city">Ломоносов</strong>, <span id="place-address">Александровская ул., 32Б</span>.
+        <span id="place-hours">Ежедневно, 10:00–23:00</span>.
+        <a href="#delivery" id="place-delivery">Доставка по городу 250 ₽, бесплатно от 1000 ₽</a>
       </p>
-      <a href="#contacts" class="btn btn--small hide-mobile" data-call>Позвонить</a>
+      <a href="tel:+78124229779" class="btn btn--small hide-mobile" data-call>Позвонить</a>
     </div>
   </div>
 
-  <!-- Меню — первым блоком страницы -->
+  <!-- Баннер с главной фишкой: цветные булки -->
+  <!-- TODO: «С 2014 года» и «100% говядины» сверить с владельцем; фото — от гостей в Яндекс Картах, нужно разрешение или фото владельца -->
+  <section class="promo" aria-labelledby="promo-title">
+    <div class="container promo__inner">
+      <div class="promo__text">
+        <h2 class="promo__title" id="promo-title">Бургеры с синей, красной и чёрной булкой</h2>
+        <p class="promo__sub">Котлеты из 100% говядины. С 2014 года в Ломоносове</p>
+        <a href="#menu" class="btn promo__btn">Смотреть меню</a>
+      </div>
+      <div class="promo__pics">
+        <picture>
+          <source srcset="images/blue-bun.webp" type="image/webp">
+          <img src="images/blue-bun.jpg" alt="Бургер с синей булкой" width="750" height="750">
+        </picture>
+        <picture>
+          <source srcset="images/black-bun.webp" type="image/webp">
+          <img src="images/black-bun.jpg" alt="Бургер с чёрной булкой" width="584" height="1280">
+        </picture>
+      </div>
+    </div>
+  </section>
+
+  <!-- Меню — сразу под баннером -->
   <section id="menu" class="section section--first">
     <div class="container">
       <div class="section__head">
@@ -113,6 +144,13 @@
       </div>
       <div class="tabs" id="tabs"></div>
       <div class="menu-list" id="menu-grid"></div>
+      <noscript>
+        <p class="menu-noscript">
+          Меню доступно по телефону:
+          Ломоносов — <a href="tel:+78124229779">+7 (812) 422-97-79</a>,
+          Волхов — <a href="tel:+79523822235">+7 (952) 382-22-35</a>.
+        </p>
+      </noscript>
       <button type="button" class="btn btn--outline menu-more" id="menu-more" hidden></button>
       <p class="note">Комбо — цена за средний и большой набор. Цены и наличие блюд в разных городах могут отличаться, уточняйте при заказе.</p>
     </div>
@@ -123,9 +161,26 @@
     <div class="container">
       <div class="section__head">
         <h2 class="section__title">Доставка</h2>
-        <div class="seg" data-city-tabs aria-label="Выбор города"></div>
+        <div class="seg" data-city-tabs role="group" aria-label="Выбор города"></div>
       </div>
-      <div id="delivery-info"></div>
+      <div id="delivery-info">
+        <table class="table">
+          <thead>
+            <tr><th>Куда везём</th><th>Доставка</th><th>Бесплатно при заказе от</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ломоносов</td><td>250 ₽</td><td>1000 ₽</td></tr>
+            <tr><td>Мартышкино, Сойкино, Кронколония</td><td>300 ₽</td><td>1250 ₽</td></tr>
+            <tr><td>Петергоф, Низино, Ижора</td><td>350 ₽</td><td>1500 ₽</td></tr>
+            <tr><td>Стрельна, Кронштадт, Лебяжье</td><td>600 ₽</td><td>2500 ₽</td></tr>
+          </tbody>
+        </table>
+        <div class="delivery-foot">
+          <a href="tel:+78124229779" class="btn">Заказать по телефону +7 (812) 422-97-79</a>
+          <a href="https://vk.me/neoburger" class="btn btn--outline" target="_blank" rel="noopener">Написать в ВК</a>
+          <span>Ежедневно, 10:00–23:00.</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -153,19 +208,31 @@
       </div>
       <div class="gallery">
         <figure>
-          <img src="images/hall-sign.jpg" alt="Вход в Neo Burger с красной неоновой вывеской" loading="lazy">
+          <picture>
+            <source srcset="images/hall-sign.webp" type="image/webp">
+            <img src="images/hall-sign.jpg" alt="Вход в Neo Burger с красной неоновой вывеской" width="1280" height="960" loading="lazy">
+          </picture>
           <figcaption>Neo Burger в Волхове</figcaption>
         </figure>
         <figure>
-          <img src="images/red-tray.jpg" alt="Наггетсы, картошка фри в фирменной упаковке и газировка на красном подносе" loading="lazy">
+          <picture>
+            <source srcset="images/red-tray.webp" type="image/webp">
+            <img src="images/red-tray.jpg" alt="Наггетсы, картошка фри в фирменной упаковке и газировка на красном подносе" width="960" height="1280" loading="lazy">
+          </picture>
           <figcaption>Наггетсы и фри</figcaption>
         </figure>
         <figure>
-          <img src="images/blue-bun.jpg" alt="Бургер с синей булочкой и кунжутом" loading="lazy">
+          <picture>
+            <source srcset="images/blue-bun.webp" type="image/webp">
+            <img src="images/blue-bun.jpg" alt="Бургер с синей булочкой и кунжутом" width="750" height="750" loading="lazy">
+          </picture>
           <figcaption>Бургер с синей булкой</figcaption>
         </figure>
         <figure>
-          <img src="images/black-bun.jpg" alt="Бургер с чёрной булочкой, говяжьей котлетой и салатом" loading="lazy">
+          <picture>
+            <source srcset="images/black-bun.webp" type="image/webp">
+            <img src="images/black-bun.jpg" alt="Бургер с чёрной булочкой, говяжьей котлетой и салатом" width="584" height="1280" loading="lazy">
+          </picture>
           <figcaption>Бургер с чёрной булкой</figcaption>
         </figure>
       </div>
@@ -177,13 +244,24 @@
     <div class="container">
       <div class="section__head">
         <h2 class="section__title">Адреса</h2>
-        <div class="seg" data-city-tabs aria-label="Выбор города"></div>
+        <div class="seg" data-city-tabs role="group" aria-label="Выбор города"></div>
       </div>
       <div class="contacts">
-        <div class="contacts__info" id="city-info"></div>
+        <div class="contacts__info" id="city-info">
+          <p><span class="label">Адрес</span>г. Ломоносов, Александровская ул., 32Б</p>
+          <p><span class="label">Часы работы</span>Ежедневно, 10:00–23:00</p>
+          <p><span class="label">Телефон</span><a href="tel:+78124229779">+7 (812) 422-97-79</a></p>
+          <p><span class="label">ВКонтакте</span><a href="https://vk.ru/neoburger" target="_blank" rel="noopener">vk.ru/neoburger</a></p>
+          <p class="city-note">Наша первая бургерная, открыта в 2014 году.</p>
+          <p class="contacts__buttons">
+            <a href="https://yandex.ru/maps/?rtext=~59.910501,29.775342&amp;rtt=auto" class="btn btn--small btn--outline" target="_blank" rel="noopener">Построить маршрут в Яндекс Картах</a>
+            <a href="https://vk.me/neoburger" class="btn btn--small btn--outline" target="_blank" rel="noopener">Написать в ВК</a>
+          </p>
+        </div>
         <div class="contacts__map">
           <iframe
             id="city-map"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=29.767342,59.907500999999996,29.783341999999998,59.913501&amp;layer=mapnik&amp;marker=59.910501,29.775342"
             title="Neo Burger на карте"
             loading="lazy"
             allowfullscreen></iframe>
@@ -204,11 +282,14 @@
           <li>Детский набор с игрушкой, салаты и десерты для всей семьи.</li>
         </ul>
       </div>
-      <img class="about__img" src="images/poster.jpg" alt="Плакат на стене Neo Burger: бургер в разрезе — булочка, 100% говядина, сыр, томаты, салат, лук и соус" loading="lazy">
+      <picture class="about__pic">
+        <source srcset="images/poster.webp" type="image/webp">
+        <img class="about__img" src="images/poster.jpg" alt="Плакат на стене Neo Burger: бургер в разрезе — булочка, 100% говядина, сыр, томаты, салат, лук и соус" width="1213" height="1280" loading="lazy">
+      </picture>
     </div>
   </section>
 
-  <!-- Подвал: адреса и телефоны обеих точек подставляются из script.js -->
+  <!-- Подвал: адреса и телефоны обеих точек (прописаны в HTML, script.js перерисовывает их из locations) -->
   <footer class="footer">
     <div class="container footer__inner">
       <div>
@@ -218,14 +299,30 @@
         <p class="footer__links"><a href="privacy.html">Политика конфиденциальности</a></p>
 
       </div>
-      <div class="footer__places" id="footer-places"></div>
+      <div class="footer__places" id="footer-places">
+        <div>
+          <h3>Ломоносов</h3>
+          <p>г. Ломоносов, Александровская ул., 32Б</p>
+          <p><a href="tel:+78124229779">+7 (812) 422-97-79</a></p>
+          <p>Ежедневно, 10:00–23:00</p>
+        </div>
+        <div>
+          <h3>Волхов</h3>
+          <p>г. Волхов, ул. Юрия Гагарина, 1В, ТРК «CUBUS», 1 этаж</p>
+          <p><a href="tel:+79523822235">+7 (952) 382-22-35</a></p>
+          <p>Ежедневно, 10:00–21:00</p>
+        </div>
+      </div>
     </div>
   </footer>
 
   <!-- Круглая кнопка звонка на телефонах (номер подставляется по выбранному городу) -->
-  <a href="#contacts" class="call-fab" data-call aria-label="Позвонить">
+  <a href="tel:+78124229779" class="call-fab" data-call aria-label="Позвонить">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
   </a>
+
+  <!-- Круглая кнопка ВК на телефонах, слева от кнопки звонка (чат с группой выбранного города) -->
+  <a href="https://vk.me/neoburger" class="vk-fab" data-vk target="_blank" rel="noopener" aria-label="Написать во ВКонтакте">VK</a>
 
   <!-- Плашка про cookie (показывается, пока посетитель не нажал «Хорошо») -->
   <div class="cookie" id="cookie" hidden>

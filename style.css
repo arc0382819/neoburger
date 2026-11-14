@@ -1,3 +1,22 @@
+/* Шрифт Golos Text лежит в fonts/ (лицензия — fonts/OFL.txt).
+   Это вариативный шрифт: в одном файле сразу все жирности, мы используем 400, 500, 700 и 900. */
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/golos-text-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("fonts/golos-text-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --white: #ffffff;
   --grey: #f3f3f3;
@@ -8,6 +27,8 @@
   --red: #e3121b;
   --red-dark: #b80d15;
   --yellow: #ffc72c;
+  /* Фирменный синий ВКонтакте — для кнопки чата */
+  --vk: #0077ff;
 }
 
 * { box-sizing: border-box; }
@@ -27,6 +48,10 @@ a { color: var(--red); }
 
 /* Атрибут hidden всегда прячет элемент, даже если у класса задан display */
 [hidden] { display: none !important; }
+
+/* width/height у <img> нужны браузеру, чтобы заранее знать пропорции, а размер задаёт CSS */
+picture { display: block; }
+img { max-width: 100%; height: auto; }
 
 :focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
 
@@ -134,6 +159,33 @@ a { color: var(--red); }
 .place__text { margin: 0; font-size: 15px; color: var(--muted); }
 .place__text strong { color: var(--text); }
 .place__text a { color: var(--text); font-weight: 500; }
+
+/* Баннер с цветными булками */
+.promo { background: var(--yellow); }
+.promo__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.promo__title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.3px;
+}
+.promo__sub { margin: 6px 0 16px; font-size: 16px; }
+.promo__pics { display: flex; gap: 12px; flex-shrink: 0; }
+.promo__pics img {
+  display: block;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 6px;
+}
 
 /* Секции */
 .section { padding: 56px 0; }
@@ -243,6 +295,7 @@ a { color: var(--red); }
 }
 
 .menu-more { display: block; margin: 24px auto 0; }
+.menu-noscript { margin: 16px 0 0; font-size: 18px; }
 .menu-empty { grid-column: 1 / -1; color: var(--muted); padding: 24px 0; }
 .note { color: var(--muted); font-size: 14px; margin: 20px 0 0; }
 
@@ -317,6 +370,7 @@ a { color: var(--red); }
 .contacts__info p { margin: 0 0 16px; }
 .contacts__info .label { display: block; color: var(--muted); font-size: 14px; }
 .contacts__info .city-note { color: var(--muted); font-size: 14px; }
+.contacts__buttons { display: flex; flex-wrap: wrap; gap: 8px; }
 .contacts__map iframe {
   display: block;
   width: 100%;
@@ -337,13 +391,8 @@ a { color: var(--red); }
 .about p { max-width: 62ch; }
 .about__list { padding-left: 20px; margin: 0; }
 .about__list li { margin-bottom: 6px; }
-.about__img {
-  display: block;
-  width: 100%;
-  max-width: 380px;
-  border-radius: 4px;
-  justify-self: end;
-}
+.about__pic { width: 100%; max-width: 380px; justify-self: end; }
+.about__img { display: block; width: 100%; border-radius: 4px; }
 
 /* Подвал */
 .footer {
@@ -409,6 +458,26 @@ a { color: var(--red); }
   z-index: 20;
 }
 
+/* Круглая кнопка ВК — только на телефонах, слева от кнопки звонка */
+.vk-fab {
+  display: none;
+  position: fixed;
+  right: 84px; /* 16px отступ + 56px кнопка звонка + 12px зазор */
+  bottom: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--vk);
+  color: var(--white);
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
 /* Планшеты и телефоны */
 @media (max-width: 860px) {
   /* на телефоне звонок — через круглую кнопку внизу */
@@ -419,6 +488,13 @@ a { color: var(--red); }
   .logo__img { height: 36px; }
   .seg__btn { padding: 6px 10px; font-size: 13px; }
   .place__inner { flex-wrap: wrap; }
+  /* Баннер компактный: фото маленькие и столбиком справа, чтобы меню было близко */
+  .promo__inner { align-items: flex-start; gap: 12px; padding-top: 16px; padding-bottom: 16px; }
+  .promo__title { font-size: 20px; }
+  .promo__sub { margin: 4px 0 12px; font-size: 14px; }
+  .promo__btn { padding: 8px 16px; font-size: 15px; }
+  .promo__pics { flex-direction: column; gap: 8px; }
+  .promo__pics img { width: 64px; height: 64px; }
   .section { padding: 40px 0; }
   .section__title { font-size: 26px; }
   .menu-search { max-width: none; }
@@ -427,11 +503,12 @@ a { color: var(--red); }
   .contacts,
   .about { grid-template-columns: 1fr; }
   .reviews { gap: 20px; }
-  .about__img { justify-self: start; max-width: 260px; }
+  .about__pic { justify-self: start; max-width: 260px; }
   .gallery { grid-template-columns: repeat(2, 1fr); }
   .table th,
   .table td { padding: 10px 8px; font-size: 14px; }
-  .call-fab { display: flex; }
+  .call-fab,
+  .vk-fab { display: flex; }
   /* Плашка cookie на всю ширину и выше круглой кнопки звонка */
   .cookie { right: 16px; max-width: none; bottom: 84px; }
 }
